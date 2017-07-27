@@ -18,10 +18,10 @@
 
 (defn home-page []
     [:div.container
-     [:h2 "Welcome to myreagent"]
+     [:h2 "Generar manos de poker"]
      [:div [components/random-hand-component]]
      [components/poker-score]
-     [:div [components/new-hand-button]]
+     [:div [components/new-hand-button] [components/reset-history-button] [components/generate-hands-button 10000]]
      [:div [:a {:href "/about"} "go to about page"]]
      [:div [:a {:href "/another"} "go to another page"]]])
 
@@ -101,4 +101,5 @@
        (secretary/locate-route path))})
   (accountant/dispatch-current!)
   (mount-root)
-  (components/init-poker!))
+  (components/init-poker!)
+  )

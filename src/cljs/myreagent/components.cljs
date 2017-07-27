@@ -53,31 +53,47 @@
 
   (swap! state assoc :hand hand)
   (swap! scores assoc-in [id] (poker/value hand))))
-(defn init-poker! []
-  (apply add-new-hand!
-         (apply ()
-           (repeat 1000 (poker/random-hand)))))
 
+(defn reset-history! []
+  (reset! scores (sorted-map))
+  (reset! scores-count 0))
+(defn reset-history-button []
+  [:button.btn.btn-danger
+   {:on-click #(reset-history!)} "Limpiar historial"])
+
+
+(defn generate-hands! [times]
+    (reset-history!)
+    (dotimes [_ times]
+      (add-new-hand! (poker/random-hand))))
+
+(defn init-poker! []
+  (generate-hands! 100000))
+
+(defn generate-hands-button [times]
+  [:button.btn.btn-default {:on-click #(generate-hands! times)} (str "Generate " times " hands")])
 (defn new-hand-button []
   [:button.btn.btn-default {:on-click #(add-new-hand! (poker/random-hand))} "Otra mano"])
 
 (defn distribution-table [freqs]
   [:table.table
    [:thead
+    [:caption "Distribución"]
     [:tr
     [:th "Score"] [:th "Times"] [:th "%"]]]
    [:tbody
-   (do
      (for
      [[freq, times] freqs]
      [:tr {:key freq}
-      [:td (str freq)]
+      [:td (poker/poker-score-mapping freq)]
       [:td (str times)]
-      [:td (str (*
-                  (/
-                    times
-                    @scores-count)
-                  100))]]))]])
+      [:td (str (.toPrecision
+                  (*
+                    (/
+                      times
+                      @scores-count)
+                    100)
+                  4))]])]])
 
 
 (defn poker-score []
@@ -89,19 +105,19 @@
                             (str times)
                             " times ("
                             (str
-                              (*
+                              (.toPrecision (*
                                 (/
                                   times
                                   @scores-count)
-                                100.0))
+                                100.0) 5))
                             (str \%)
                             ")")))]
   [:div
-   [:div (str "Score: " (poker/value (get-in @state [:hand])))]
+   [:div (str "Score: " (poker/hand-score-description
+                          (get-in @state [:hand])))]
    [:div (str "Jugadas: " @scores-count)]
-   [:div (str "Distribucion: ")
-    [distribution-table (frequencies
-                                 (vals @scores))]]]))
+   [distribution-table (frequencies
+                                 (vals @scores))]]))
 
 (defn random-hand-component []
   [hand-component (get-in @state [:hand])])

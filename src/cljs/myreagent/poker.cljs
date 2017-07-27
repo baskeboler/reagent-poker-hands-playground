@@ -17,6 +17,10 @@
       (js/parseInt (str fst))
       (get rank-replacements fst))))
 
+(defn max-rank [hand]
+  (let [ranks (map rank hand)]
+    (apply max ranks)))
+
 (defn card [c]
   c)
 
@@ -184,3 +188,27 @@ all-cards
     (pair? hand) 1
     :else 0))
 (let [h (random-hand)] [(value h) h])
+
+(defn hand-score-description [hand]
+  (let [score (value hand)]
+    (cond
+      (== score 0) (str "Un " (max-rank hand))
+      (== score 1) "Un par"
+      (== score 2) "Doble par"
+      (== score 3) "Pierna"
+      (== score 4) "Escalera"
+      (== score 5) "Color"
+      (== score 6) "Full house"
+      (== score 7) "Poker"
+      (== score 8) "Escalera Real")))
+(def poker-score-mapping {
+                           0 "Carta más alta"
+                           1 "Par"
+                           2 "Doble par"
+                           3 "Pierna"
+                           4 "Escalera"
+                           5 "Flush/Color"
+                           6 "Full"
+                           7 "Poker"
+                           8 "Escalera Real"
+                           })
