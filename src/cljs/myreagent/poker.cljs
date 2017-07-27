@@ -1,6 +1,5 @@
 (ns myreagent.poker)
 
-
 (def rank-replacements
   {\T 10
    \J 11
@@ -11,9 +10,9 @@
 (defn rank [card]
   (let [[fst _] card]
     (if
-      (not
-        (js/isNaN
-          (js/parseInt (str fst))))
+     (not
+      (js/isNaN
+       (js/parseInt (str fst))))
       (js/parseInt (str fst))
       (get rank-replacements fst))))
 
@@ -25,8 +24,8 @@
   c)
 
 (def all-ranks (concat
-                 (range 2 10)
-                 [\T \J \Q \K \A]))
+                (range 2 10)
+                [\T \J \Q \K \A]))
 all-ranks
 (def all-suits [\C \D \H \S])
 (def suit-names
@@ -44,7 +43,7 @@ all-cards
 
 (defn random-hand []
   (take 5
-      (shuffle all-cards)))
+        (shuffle all-cards)))
 (random-hand)
 
 (rank "AH")
@@ -84,14 +83,14 @@ all-cards
 
 (defn max-repetitions [hand]
   (let [reps (vals
-    (frequencies
-      (map rank hand)))]
+              (frequencies
+               (map rank hand)))]
     (apply max reps)))
 
 (defn pair? [hand]
-      (==
-        (max-repetitions hand)
-        2))
+  (==
+   (max-repetitions hand)
+   2))
 ;; (apply max
 ;;   (vals
 ;;     (frequencies
@@ -102,26 +101,26 @@ all-cards
 ;; (pair? three-of-a-kind-hand)
 
 (defn three-of-a-kind? [hand]
-    (==
-      (max-repetitions hand)
-      3))
+  (==
+   (max-repetitions hand)
+   3))
 ;; (three-of-a-kind? two-pairs-hand)
 ;; (three-of-a-kind? three-of-a-kind-hand)
 
 
 (defn four-of-a-kind? [hand]
   (==
-    (max-repetitions hand)
-    4))
+   (max-repetitions hand)
+   4))
 
 (defn flush? [hand]
   (let [suits (map suit hand)]
     (==
-      (apply max
-           (vals
-            (frequencies
+     (apply max
+            (vals
+             (frequencies
               suits)))
-      5)))
+     5)))
 ;; (flush? flush-hand)
 ;; (flush? high-seven)
 ;; (flush? four-of-a-kind-hand)
@@ -129,21 +128,21 @@ all-cards
 
 (defn full-house? [hand]
   (=
-    [2 3]
-    (sort
-      (vals
-        (frequencies
-          (map rank hand))))))
+   [2 3]
+   (sort
+    (vals
+     (frequencies
+      (map rank hand))))))
 ;; (full-house? full-house-hand)
 ;; (full-house? low-ace-straight-hand)
 
 (defn two-pairs? [hand]
   (=
-    [1 2 2]
-    (sort
-      (vals
-        (frequencies
-          (map rank hand))))))
+   [1 2 2]
+   (sort
+    (vals
+     (frequencies
+      (map rank hand))))))
 ;; (two-pairs? two-pairs-hand)
 ;; (two-pairs? three-of-a-kind-hand)
 ;; (two-pairs? pair-hand)
@@ -154,23 +153,23 @@ all-cards
         has-ace (== max-rank 14)
         min-rank  (apply min ranks)
         low-straight-seq (if
-                           has-ace
+                          has-ace
                            (range 1 6)
                            (range min-rank (+ min-rank 5)))
         straight-seqs (if
-                        has-ace
+                       has-ace
                         [(range 10 15) (sort
-                                         (cons
-                                           14
-                                           (range 2 6)))]
+                                        (cons
+                                         14
+                                         (range 2 6)))]
                         [low-straight-seq])]
     (reduce (fn [a b] (if a a b))
-           (map (fn [ss] (= ranks ss)) straight-seqs))))
+            (map (fn [ss] (= ranks ss)) straight-seqs))))
 
 ;; (straight? straight-hand)
 (defn straight-flush? [hand]
   (if
-    (straight? hand)
+   (straight? hand)
     (flush? hand)
     false))
 ;; (straight-flush? straight-hand)
@@ -201,14 +200,12 @@ all-cards
       (== score 6) "Full house"
       (== score 7) "Poker"
       (== score 8) "Escalera Real")))
-(def poker-score-mapping {
-                           0 "Carta más alta"
-                           1 "Par"
-                           2 "Doble par"
-                           3 "Pierna"
-                           4 "Escalera"
-                           5 "Flush/Color"
-                           6 "Full"
-                           7 "Poker"
-                           8 "Escalera Real"
-                           })
+(def poker-score-mapping {0 "Carta más alta"
+                          1 "Par"
+                          2 "Doble par"
+                          3 "Pierna"
+                          4 "Escalera"
+                          5 "Flush/Color"
+                          6 "Full"
+                          7 "Poker"
+                          8 "Escalera Real"})

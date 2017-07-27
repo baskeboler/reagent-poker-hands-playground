@@ -17,27 +17,23 @@
   (.log js/console (clj->js @state)))
 
 (defn home-page []
-    [:div.container
-     [:h2 "Generar manos de poker"]
-     [:div [components/random-hand-component]]
-     [components/poker-score]
-     [:div [components/new-hand-button] [components/reset-history-button] [components/generate-hands-button 10000]]
-     [:div [:a {:href "/about"} "go to about page"]]
-     [:div [:a {:href "/another"} "go to another page"]]])
+  [:div.container
+   [:h2 "Generar manos de poker"]
+   [:div [components/random-hand-component]]
+   [components/poker-score]
+   [:div [components/new-hand-button] [components/reset-history-button] [components/generate-hands-button 10000]]
+   [:div [:a {:href "/about"} "go to about page"]]
+   [:div [:a {:href "/another"} "go to another page"]]])
 
 (def unvalor (atom "texto"))
-(def user-info (atom {
-  :nombre "Victor"
-  :user "baskeboler"
-  :email "baskeboler@gmail.com"
-}))
+(def user-info (atom {:nombre "Victor"
+                      :user "baskeboler"
+                      :email "baskeboler@gmail.com"}))
 
 (defn uninput [miatomo]
   [:div
    [:input
-    {:type "text" :defaultValue @miatomo :on-change #(reset! miatomo (-> % .-target .-value))}
-    ]
-   ])
+    {:type "text" :defaultValue @miatomo :on-change #(reset! miatomo (-> % .-target .-value))}]])
 (defn displayvalor [valor]
   [:div valor])
 
@@ -49,9 +45,7 @@
    [uninput unvalor]
    [displayvalor @unvalor]
    [uninput (atom (:nombre user-info))]
-   [displayvalor (:nombre @user-info)]
-   ]
-  )
+   [displayvalor (:nombre @user-info)]])
 (defn another-page []
   [:div
    [:div.page-header [:h1 "Reagent Form"]]
@@ -71,19 +65,16 @@
 
 (def page (atom #'home-page))
 
-
-
 (defn current-page []
   [:div [@page]])
 
 (secretary/defroute "/" []
-                    (reset! page #'home-page))
+  (reset! page #'home-page))
 
 (secretary/defroute "/about" []
-                    (reset! page #'about-page))
+  (reset! page #'about-page))
 (secretary/defroute "/another" []
   (reset! page #'another-page))
-
 
 ;; -------------------------
 ;; Initialize app
@@ -93,13 +84,12 @@
 
 (defn init! []
   (accountant/configure-navigation!
-    {:nav-handler
-     (fn [path]
-       (secretary/dispatch! path))
-     :path-exists?
-     (fn [path]
-       (secretary/locate-route path))})
-  (accountant/dispatch-current!)
-  (mount-root)
+   {:nav-handler
+    (fn [path]
+      (secretary/dispatch! path))
+    :path-exists?
+    (fn [path]
+      (secretary/locate-route path))})
   (components/init-poker!)
-  )
+  (accountant/dispatch-current!)
+  (mount-root))

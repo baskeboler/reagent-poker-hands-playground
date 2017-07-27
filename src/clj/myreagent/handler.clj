@@ -1,5 +1,5 @@
 (ns myreagent.handler
-  (:require [compojure.core :refer [GET defroutes POST  ]]
+  (:require [compojure.core :refer [GET defroutes POST]]
             [compojure.route :refer [not-found resources]]
             [hiccup.page :refer [include-js include-css html5]]
             [myreagent.middleware :refer [wrap-middleware]]
@@ -7,10 +7,10 @@
 
 (def mount-target
   [:div#app
-      [:h3 "ClojureScript has not been compiled!"]
-      [:p "please run "
-       [:b "lein figwheel"]
-       " in order to start the compiler"]])
+   [:h3 "ClojureScript has not been compiled!"]
+   [:p "please run "
+    [:b "lein figwheel"]
+    " in order to start the compiler"]])
 
 (defn head []
   [:head
@@ -22,11 +22,10 @@
 
 (defn loading-page []
   (html5
-    (head)
-    [:body {:class "body-container"}
-     mount-target
-     (include-js "/js/app.js")]))
-
+   (head)
+   [:body {:class "body-container"}
+    mount-target
+    (include-js "/js/app.js")]))
 
 (defroutes routes
   (GET "/" [] (loading-page))

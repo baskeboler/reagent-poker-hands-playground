@@ -22,6 +22,7 @@
 
   :plugins [[lein-environ "1.0.2"]
             [lein-cljsbuild "1.1.5"]
+            [lein-cljfmt "0.5.6"]
             [lein-asset-minifier "0.2.7"
              :exclusions [org.clojure/clojure]]]
 
