@@ -1,4 +1,4 @@
-(ns myreagent.poker)
+(ns myreagent.poker.logic)
 
 (def rank-replacements
   {\T 10
@@ -26,7 +26,7 @@
 (def all-ranks (concat
                 (range 2 10)
                 [\T \J \Q \K \A]))
-all-ranks
+
 (def all-suits [\C \D \H \S])
 (def suit-names
   {"C" "Clubs"
@@ -34,17 +34,17 @@ all-ranks
    "H" "Hearts"
    "S" "Spades"})
 
-all-suits
+
 (def all-cards
   (for [rank all-ranks
         suit all-suits]
     (card (str rank suit))))
-all-cards
+
 
 (defn random-hand []
   (take 5
         (shuffle all-cards)))
-(random-hand)
+
 
 (rank "AH")
 (rank "2H") ;=> 2
@@ -62,8 +62,6 @@ all-cards
 (defn suit-name [card]
   (get suit-names
        (suit card)))
-(suit "4K")
-(frequencies [1 2 3 1 1 2])
 
 ; hands
 ;; (def high-seven                   ["2H" "3S" "4C" "5C" "7D"])

@@ -3,6 +3,7 @@
             [secretary.core :as secretary :include-macros true]
             [accountant.core :as accountant]
             [myreagent.components :as components :refer [selection-list get-value set-value! text-input state]]
+            [myreagent.poker.components :as poker]
             [ajax.core :refer [POST]]))
 
 ;; -------------------------
@@ -19,9 +20,9 @@
 (defn home-page []
   [:div.container
    [:h2 "Generar manos de poker"]
-   [:div [components/random-hand-component]]
-   [components/poker-score]
-   [:div [components/new-hand-button] [components/reset-history-button] [components/generate-hands-button 10000]]
+   [:div [poker/random-hand-component]]
+   [poker/poker-score]
+   [:div [poker/new-hand-button] [poker/reset-history-button] [poker/generate-hands-button 10000]]
    [:div [:a {:href "/about"} "go to about page"]]
    [:div [:a {:href "/another"} "go to another page"]]])
 
@@ -90,6 +91,6 @@
     :path-exists?
     (fn [path]
       (secretary/locate-route path))})
-  (components/init-poker!)
+  (poker/init-poker!)
   (accountant/dispatch-current!)
   (mount-root))
