@@ -4,15 +4,12 @@
             [accountant.core :as accountant]
             [myreagent.components :as components :refer [selection-list get-value set-value! text-input state]]
             [myreagent.poker.components :as poker]
-            [ajax.core :refer [POST]]))
+            [myreagent.common.components :as common]
+            [ajax.core :refer [POST]]
+            [myreagent.services.chuck-norris :refer [random-joke]]))
 
 ;; -------------------------
 ;; Views
-
-;; (defn save-doc []
-;;   (POST (str js/context "/save")
-;;         {:params (:doc @state)
-;;          :handler (fn [_] (swap! state assoc :saved? true))}))
 
 (defn save-doc []
   (.log js/console (clj->js @state)))
@@ -22,33 +19,41 @@
    [:h2 "Generar manos de poker"]
    [:div [poker/random-hand-component]]
    [poker/poker-score]
-   [:div [poker/new-hand-button] [poker/reset-history-button] [poker/generate-hands-button 10000]]
-   [:div [:a {:href "/about"} "go to about page"]]
-   [:div [:a {:href "/another"} "go to another page"]]])
+   [:div
+    [poker/new-hand-button]
+    [poker/reset-history-button]
+    [poker/generate-hands-button 10000]]])
 
 (def unvalor (atom "texto"))
 (def user-info (atom {:nombre "Victor"
                       :user "baskeboler"
                       :email "baskeboler@gmail.com"}))
 
-(defn uninput [miatomo]
-  [:div
+(defn uninput [miatomo label]
+  [:div.form-group
+   [:label label]
    [:input
-    {:type "text" :defaultValue @miatomo :on-change #(reset! miatomo (-> % .-target .-value))}]])
+    {:type "text"
+     :class "form-control"
+     :defaultValue @miatomo
+     :on-change #(reset!
+                  miatomo (-> % .-target .-value))}]])
+
 (defn displayvalor [valor]
-  [:div valor])
+  [:div.form-control-static valor])
 
 (defn about-page []
-  [:div [:h2 "About myreagent"]
-   [:div [:a {:href "/"} "go to the home page"]]
-   [:div "Aca hay mas texto"]
+  [:div.container
+   [:h2 "About myreagent"]
+      [:div "Aca hay mas texto"]
    [:div "Y acá de nuevo"]
-   [uninput unvalor]
+   [uninput unvalor "un valor"]
    [displayvalor @unvalor]
-   [uninput (atom (:nombre user-info))]
+   [uninput (atom (:nombre user-info)) "Otro valor"]
    [displayvalor (:nombre @user-info)]])
+
 (defn another-page []
-  [:div
+  [:div.container
    [:div.page-header [:h1 "Reagent Form"]]
    [text-input :first-name "First name"]
    [text-input :last-name "Last name"]
@@ -67,7 +72,9 @@
 (def page (atom #'home-page))
 
 (defn current-page []
-  [:div [@page]])
+  [:div
+   [common/page-header]
+   [@page]])
 
 (secretary/defroute "/" []
   (reset! page #'home-page))

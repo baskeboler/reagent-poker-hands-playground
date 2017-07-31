@@ -18,7 +18,8 @@
                   :scope "provided"]
                  [secretary "1.2.3"]
                  [venantius/accountant "0.2.0"
-                  :exclusions [org.clojure/tools.reader]]]
+                  :exclusions [org.clojure/tools.reader]]
+                 [bootstrap "0.0.1-SNAPSHOT"]]
 
   :plugins [[lein-environ "1.0.2"]
             [lein-cljsbuild "1.1.5"]

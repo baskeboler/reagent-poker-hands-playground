@@ -34,17 +34,14 @@
    "H" "Hearts"
    "S" "Spades"})
 
-
 (def all-cards
   (for [rank all-ranks
         suit all-suits]
     (card (str rank suit))))
 
-
 (defn random-hand []
   (take 5
         (shuffle all-cards)))
-
 
 (rank "AH")
 (rank "2H") ;=> 2

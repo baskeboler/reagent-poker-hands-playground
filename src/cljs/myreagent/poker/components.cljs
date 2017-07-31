@@ -24,7 +24,6 @@
      [:div.col.col-sm-2.card {:key card}
       (str (poker/rank card) " - " (poker/suit-name card))])])
 
-
 (defn hand-by-id [id]
   (@hands id))
 
@@ -45,11 +44,10 @@
   [:button.btn.btn-danger
    {:on-click #(reset-history!)} "Limpiar historial"])
 
-
 (defn generate-hands! [times]
   (reset-history!)
   (loop [iteration 0]
-   
+
     (if (>= iteration times)
       (.log js/console "Finished generating hands")
       (do
@@ -69,21 +67,21 @@
   [:table.table
    [:caption "Distribución"]
    [:thead
-     [:tr
-      [:th "Score"] [:th "Times"] [:th "%"]]]
+    [:tr
+     [:th "Score"] [:th "Times"] [:th "%"]]]
    [:tbody
-    (for
-        [[freq, times] freqs]
-      [:tr {:key freq}
-       [:td (poker/poker-score-mapping freq)]
-       [:td (str times)]
-       [:td (str (.toPrecision
-                  (*
-                   (/
-                    times
-                    @scores-count)
-                   100)
-                  4))]])]])
+    (doall
+     (for [[freq, times] (sort-by (fn [[_, a]] (- a)) freqs)]
+       [:tr {:key freq}
+        [:td (poker/poker-score-mapping freq)]
+        [:td (str times)]
+        [:td (str (.toPrecision
+                   (*
+                    (/
+                     times
+                     @scores-count)
+                    100)
+                   4))]]))]])
 
 (defn poker-score []
   (let [print-freq (fn [arg]
@@ -110,3 +108,4 @@
 
 (defn random-hand-component []
   [hand-component (current-hand)])
+
