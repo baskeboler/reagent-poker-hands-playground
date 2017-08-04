@@ -5,27 +5,18 @@
             [myreagent.components :as components :refer [selection-list get-value set-value! text-input state]]
             [myreagent.poker.components :as poker]
             [myreagent.common.components :as common]
-            [ajax.core :refer [POST GET]]
             [myreagent.services.chuck-norris :refer [random-joke]]))
 
 ;; -------------------------
 ;; Views
 (def current-joke (atom ""))
 
-(defn joke-handler [response]
+(defn joke-handler [joke]
   (do
-    (.log js/console (str (:value response)))
-    (reset! current-joke (:value response))))
-
-(defn error-handler [{:keys [status status-text]}]
-  (.log js/console "there was an error"))
+    (reset! current-joke joke)))
 
 (defn get-joke []
-  (GET "https://api.chucknorris.io/jokes/random"
-       {:handler joke-handler
-        :error-handler error-handler
-        :response-format :json
-        :keywords? true}))
+  (random-joke joke-handler))
 
 (defn save-doc []
   (.log js/console (clj->js @state)))

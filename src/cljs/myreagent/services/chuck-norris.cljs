@@ -6,14 +6,13 @@
 
 (def api-url "https://api.chucknorris.io/jokes/random")
 
-(def current-joke (atom ""))
 
 (defn random-joke-handler
   ([custom-handler]
    (fn [resp]
      (do
        (println (str resp))
-       (custom-handler resp))))
+       (custom-handler (:value resp)))))
   ([]
    (fn []
      (random-joke-handler [identity]))))
@@ -26,12 +25,10 @@
                     status-text)))
 
 (defn random-joke
-  ([handler]
-   (GET api-url
-        {:handler (random-joke-handler identity)
+  ([handler] (GET api-url
+        {:handler (random-joke-handler handler)
          :error-handler default-error-handler
          :response-format :json
          :keywords? true
          }))
-  ([]
-   (random-joke identity)))
+  ([] (random-joke identity)))
