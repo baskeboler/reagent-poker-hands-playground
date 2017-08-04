@@ -6,7 +6,9 @@
             :about {:title "About"
                     :url "/about"}
              :joke {:title "Jokes"
-                   :url "/chuck"}})
+                    :url "/chuck"}
+            :user {:title "User details"
+                   :url "/user"}})
 
 
 (defn page-header []

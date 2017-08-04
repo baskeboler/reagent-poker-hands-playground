@@ -5,7 +5,8 @@
             [myreagent.components :as components :refer [selection-list get-value set-value! text-input state]]
             [myreagent.poker.components :as poker]
             [myreagent.common.components :as common]
-            [myreagent.services.chuck-norris :refer [random-joke]]))
+            [myreagent.services.chuck-norris :refer [random-joke]]
+            [myreagent.services.random-user :refer [random-user user-component]]))
 
 ;; -------------------------
 ;; Views
@@ -81,6 +82,11 @@
     [:p
      @current-joke]]
    [:button.btn.btn-default {:on-click get-joke} "Get joke!"]])
+
+(defn user-page []
+  [:div.container
+   [:h2 "User details"]
+   [user-component]])
 ;; -------------------------
 ;; Routes
 
@@ -100,7 +106,8 @@
   (reset! page #'another-page))
 (secretary/defroute "/chuck" []
   (reset! page #'joke-page))
-
+(secretary/defroute "/user" []
+  (reset! page #'user-page))
 ;; -------------------------
 ;; Initialize app
 
