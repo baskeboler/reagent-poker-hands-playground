@@ -5,11 +5,27 @@
             [myreagent.components :as components :refer [selection-list get-value set-value! text-input state]]
             [myreagent.poker.components :as poker]
             [myreagent.common.components :as common]
-            [ajax.core :refer [POST]]
+            [ajax.core :refer [POST GET]]
             [myreagent.services.chuck-norris :refer [random-joke]]))
 
 ;; -------------------------
 ;; Views
+(def current-joke (atom ""))
+
+(defn joke-handler [response]
+  (do
+    (.log js/console (str (:value response)))
+    (reset! current-joke (:value response))))
+
+(defn error-handler [{:keys [status status-text]}]
+  (.log js/console "there was an error"))
+
+(defn get-joke []
+  (GET "https://api.chucknorris.io/jokes/random"
+       {:handler joke-handler
+        :error-handler error-handler
+        :response-format :json
+        :keywords? true}))
 
 (defn save-doc []
   (.log js/console (clj->js @state)))
@@ -66,6 +82,14 @@
      :class "btn btn-default"
      :on-click save-doc} "Save"]])
 
+(defn joke-page []
+  [:div.container
+   [:h2 "Chuck Norris n' shit"]
+   [:hr]
+   [:blockquote
+    [:p
+     @current-joke]]
+   [:button.btn.btn-default {:on-click get-joke} "Get joke!"]])
 ;; -------------------------
 ;; Routes
 
@@ -83,6 +107,8 @@
   (reset! page #'about-page))
 (secretary/defroute "/another" []
   (reset! page #'another-page))
+(secretary/defroute "/chuck" []
+  (reset! page #'joke-page))
 
 ;; -------------------------
 ;; Initialize app
@@ -99,5 +125,6 @@
     (fn [path]
       (secretary/locate-route path))})
   (poker/init-poker!)
+  (get-joke)
   (accountant/dispatch-current!)
   (mount-root))

@@ -5,8 +5,8 @@
                    :url "/"}
             :about {:title "About"
                     :url "/about"}
-            :another {:title "Another Page"
-                      :url "/another"}})
+             :joke {:title "Jokes"
+                   :url "/chuck"}})
 
 
 (defn page-header []
